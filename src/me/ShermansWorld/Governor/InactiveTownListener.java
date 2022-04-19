@@ -35,8 +35,8 @@ public class InactiveTownListener {
 		    				long lastPlayed = mayors.get(i).getLastOnline();
 		    				long lastOnline = now - lastPlayed; // miliseconds player has been offline
 		    				long milisecPerDay = 1000 * 60 * 60 * 24; // 1000 milisec/sec * 60 sec/min * 60 min/hr * 24 hr/day
-		    				long limit = milisecPerDay * ConfigVals.daysInactive * milisecPerDay;
-		    				//long limit = 100; short timer for testing
+		    				long limit = milisecPerDay * ConfigVals.daysInactive;
+		    				//long limit = 100; //short timer for testing
 		    				if (lastOnline > limit) {
 		    					try {
 									inactiveTowns.add(mayors.get(i).getTown());

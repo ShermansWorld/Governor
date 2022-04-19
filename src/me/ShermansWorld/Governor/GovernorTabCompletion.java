@@ -22,7 +22,9 @@ public class GovernorTabCompletion implements TabCompleter {
 			}
 			completions.add("taxtown");
 			completions.add("taxnation");
-			completions.add("claim");
+			if (ConfigVals.claimEnabled) {
+				completions.add("claim");
+			}
 			completions.add("help");
 			completions.add("version");
 			return completions;

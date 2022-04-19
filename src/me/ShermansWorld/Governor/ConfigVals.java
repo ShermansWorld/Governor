@@ -21,6 +21,7 @@ public class ConfigVals {
 	public static boolean anyTownMemberCanClaim = false; // default = false
 	public static boolean anyNationMemberCanClaim = false; // default = false
 	public static List<String> claimAllowedRanks;
+	public static boolean claimEnabled = true; // default = true
 	
 	public static void initConfigVals() {
 		
@@ -40,6 +41,7 @@ public class ConfigVals {
 		anyTownMemberCanClaim = Main.getInstance().getConfig().getBoolean("ChainOfCommand.AnyTownMemberCanClaim");
 		anyNationMemberCanClaim = Main.getInstance().getConfig().getBoolean("ChainOfCommand.AnyNationMemberCanClaim");
 		claimAllowedRanks = Main.getInstance().getConfig().getStringList("ChainOfCommand.AllowedRanks");
+		claimEnabled = Main.getInstance().getConfig().getBoolean("ChainOfCommand.Enabled");
 		
 		
 	}

@@ -44,21 +44,23 @@ public class TownTaxSession {
 				isTaxing = false;
 				if (!isCanceled) {
 					mayor.sendMessage(Helper.Chatlabel() + Helper.color("&aThe &3town &atax call has ended"));
-				}
-				if (!Main.townTaxSessions.isEmpty()) {
-					for (int i = 0; i < Main.townTaxSessions.size(); i++) { // remove from main list, close tax session
-						if (Main.townTaxSessions.get(i).getTown().equals(town)) {
-							Main.townTaxSessions.remove(i);
-							break;
+					if (!Main.townTaxSessions.isEmpty()) {
+						for (int i = 0; i < Main.townTaxSessions.size(); i++) { // remove from main list, close tax
+																				// session
+							if (Main.townTaxSessions.get(i).getTown().equals(town)) {
+								Main.townTaxSessions.remove(i);
+								break;
+							}
 						}
 					}
-				}
-				if (!isCanceled) {
-					for (int i = 0; i < taxablePlayers.size(); i++) {
-						mayor.sendMessage(Helper.Chatlabel() + Helper.color(
-								"&b" + taxablePlayers.get(i).getName() + " &eabstained from paying the &3town &etax"));
-						taxablePlayers.get(i)
-								.sendMessage(Helper.Taxlabel() + Helper.color("&bThe &3town &btax call has ended"));
+					if (!Main.townTaxSessions.isEmpty()) {
+						for (int i = 0; i < Main.townTaxSessions.size(); i++) { // remove from main list, close tax
+																				// session
+							if (Main.townTaxSessions.get(i).getTown().equals(town)) {
+								Main.townTaxSessions.remove(i);
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -84,7 +86,7 @@ public class TownTaxSession {
 						mayor.sendMessage(Helper.Chatlabel() + Helper.color("&b" + player.getName()
 								+ " &awas &6exempt &afrom this &3town &atax due to a low balance"));
 					}
-				} else if (resident.getPlayer().equals(mayor) && ConfigVals.townAskCaller) {
+				} else if (onlinePlayers.contains(resident.getPlayer()) && resident.getPlayer().equals(mayor) && ConfigVals.townAskCaller) {
 					if (Main.economy.getBalance(player) > amount) {
 						taxablePlayers.add(player);
 						player.sendMessage(

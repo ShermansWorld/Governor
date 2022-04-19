@@ -55,7 +55,9 @@ public class Main extends JavaPlugin {
 		
 		
 		// Custom listeners
-		InactiveTownListener.initListener();
+		if (ConfigVals.claimEnabled) { // if chain-of-command feature enabled
+			InactiveTownListener.initListener();
+		}
 	}
 	
 	@Override

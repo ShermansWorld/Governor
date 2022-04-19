@@ -44,17 +44,15 @@ public class NationTaxSession {
 				isTaxing = false;
 				if (!isCanceled) {
 					mayor.sendMessage(Helper.Chatlabel() + Helper.color("&aThe &6nation &atax call has ended"));
-				}
-				if (!Main.nationTaxSessions.isEmpty()) {
-					for (int i = 0; i < Main.nationTaxSessions.size(); i++) { // remove from main list, close tax
-																				// session
-						if (Main.nationTaxSessions.get(i).getNation().equals(nation)) {
-							Main.nationTaxSessions.remove(i);
-							break;
+					if (!Main.nationTaxSessions.isEmpty()) {
+						for (int i = 0; i < Main.nationTaxSessions.size(); i++) { // remove from main list, close tax
+																					// session
+							if (Main.nationTaxSessions.get(i).getNation().equals(nation)) {
+								Main.nationTaxSessions.remove(i);
+								break;
+							}
 						}
 					}
-				}
-				if (!isCanceled) {
 					for (int i = 0; i < taxablePlayers.size(); i++) {
 						mayor.sendMessage(Helper.Chatlabel() + Helper.color("&b" + taxablePlayers.get(i).getName()
 								+ " &eabstained from paying the &6nation &etax"));
@@ -85,7 +83,7 @@ public class NationTaxSession {
 						mayor.sendMessage(Helper.Chatlabel() + Helper.color("&b" + player.getName()
 								+ " &awas &6exempt &afrom this &6nation &atax due to a low balance"));
 					}
-				} else if (resident.getPlayer().equals(mayor) && ConfigVals.nationAskCaller) {
+				} else if (onlinePlayers.contains(resident.getPlayer()) && resident.getPlayer().equals(mayor) && ConfigVals.nationAskCaller) {
 					if (Main.economy.getBalance(player) > amount) {
 						taxablePlayers.add(player);
 						player.sendMessage(

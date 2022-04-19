@@ -39,7 +39,9 @@ public class GovernorCommands implements CommandExecutor {
 		if (args.length == 0) {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount] &aStarts a &3town &atax call"));
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount] &aStarts a &6nation &atax call"));
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+			if (ConfigVals.claimEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+			}
 			return true;
 		}
 
@@ -59,11 +61,14 @@ public class GovernorCommands implements CommandExecutor {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount] &aStarts a &3town &atax call"));
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount] &aStarts a &6nation &atax call"));
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+			if (ConfigVals.claimEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+			}
 			return true;
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.0"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.0.1"));
 			return true;
 		}
 
@@ -136,7 +141,8 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			List<String> townRanks = TownyAPI.getInstance().getResident(p).getTownRanks();
-
+			
+			
 			if (townRanks.isEmpty()) {
 				if (!TownyAPI.getInstance().getResident(p).isMayor()) {
 					p.sendMessage(Helper.Chatlabel()
@@ -270,6 +276,11 @@ public class GovernorCommands implements CommandExecutor {
 			return true;
 
 		} else if (args[0].equalsIgnoreCase("claim")) {
+			
+			if (!ConfigVals.claimEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cChain-of-Command is not enabled on this server"));
+				return false;
+			}
 
 			Resident newMayor = TownyAPI.getInstance().getResident(p);
 

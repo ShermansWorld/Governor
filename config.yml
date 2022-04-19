@@ -6,7 +6,7 @@
 config-version: 1
 
 # =====================================
-# |            TAX SETTINGS           |
+# |          TAX CALL SETTINGS        |
 # =====================================
 
 # Tax calls are an alternative taxing method directed towards online players
@@ -59,7 +59,7 @@ NationTax:
     #- "private"
     
 # =====================================
-# |     CHANE-OF-COMMAND SETTINGS     |
+# |     CHAIN-OF-COMMAND SETTINGS     |
 # =====================================
 
 # Chain-of-Command is a feature that allows players to claim the leadership of inactive towns
@@ -67,12 +67,12 @@ NationTax:
 
 ChainOfCommand:
 
+  Enabled: true
+  # Enables/Disables the entire Chain-of-Comamnd feature 
+   
   InactiveTime: 30
   # How many days a leader must be inactive for a town's leadership to be claimed
   # Default = 30 days
-  
-  Enabled: true
-  # Enables/Disables the entire Chain-of-Comamnd feature
   
   AnyoneCanClaim: false
   # This allows ALL players to claim a town if it is deemed inactive (USE WITH CAUTION)
