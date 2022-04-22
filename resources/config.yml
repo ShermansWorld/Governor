@@ -1,0 +1,154 @@
+# ========================================
+# | Governor by ShermansWorld            |
+# | An Unofficial Towny Expansion Plugin |
+# ========================================
+
+config-version: 2
+
+# =====================================
+# |          TAX CALL SETTINGS        |
+# =====================================
+
+# Tax calls are an alternative taxing method directed towards online players
+
+TownTax:
+
+  CallTime: 6000
+  # How long the tax call will last in ticks
+  # 1 second = 20, 1 min = 1200. Default = 5 minutes (6000)
+  # Server restarts/reloads will cancel tax calls, so this shouldn't be set too high
+  
+  MaxTaxAmount: 10000
+  # The maximum tax amount allowed. Default = $10,000
+  
+  AskCaller: false
+  # If the person who started the tax will also be asked to pay it
+  
+  AllowedRanks:
+    - "co-mayor"
+    - "assistant"
+    #- "guard"
+    #- "helper"
+    #- "sheriff"
+    
+  #The towny ranks allowed to start a town tax call
+  #The town mayor is always allowed to start a tax call
+   
+NationTax:
+
+  CallTime: 6000
+  # How long the tax call will last in ticks
+  # 1 second = 20, 1 min = 1200. Default = 5 minutes (6000)
+  # Server restarts/reloads will cancel tax calls, so this shouldn't be set too high
+  MaxTaxAmount: 10000
+  # The maximum tax amount allowed. Default = $10,000
+  
+  AskCaller: false
+  # If the person who started the tax will also be asked to pay it
+  
+  AllowedRanks:
+    - "assistant"
+    #- "captain"
+    #- "colonel"
+    #- "engineer"
+    #- "general"
+    #- "gunner"
+    #- "helper"
+    #- "lieutenant"
+    #- "major"
+    #- "private"
+    
+# =====================================
+# |     CHAIN-OF-COMMAND SETTINGS     |
+# =====================================
+
+# Chain-of-Command is a feature that allows players to claim the leadership of inactive towns
+# When a player claims leadership, they will automatically become mayor and the former leader co-mayor
+
+ChainOfCommand:
+
+  Enabled: true
+  # Enables/Disables the entire Chain-of-Comamnd feature 
+  # Changing this requires a server restart/reload
+   
+  InactiveTime: 30
+  # How many days a leader must be inactive for a town's leadership to be claimed
+  # Default = 30 days
+  
+  AnyoneCanClaim: false
+  # This allows ALL players to claim a town if it is deemed inactive (USE WITH CAUTION)
+  # Overrides all other options
+  
+  AnyNationMemberCanClaim: false
+  # Nation members can assume control, even if they are not in the town
+  # Allows for town members to claim as well
+  
+  AnyTownMemberCanClaim: false
+  # Town members can assume control regardless of their towny rank
+  
+  AllowedRanks:
+    - "co-mayor"
+    - "assistant"
+    #- "guard"
+    #- "helper"
+    #- "sheriff"
+  
+  # Player can assume control of the town if they have these towny ranks
+  # Only matters if the other claim conditions are false
+  
+# =====================================
+# |        INCOME TAX SETTINGS        |
+# =====================================
+
+# This is an EXPERIMENTAL FEATURE which taxes all income streams for players and automatically routes it to the town/nation bank
+# This feature is new and is in the TESTING phase. If you find a bug please report it at https://github.com/ShermansWorld/Governor
+# It is difficult to determine what effect this will have on your server since all server ecnomies are different
+# If you are experiencing any problems with this feature I recommend disabling it below
+
+IncomeTax:
+
+   Enabled: true
+   # Enables/Disabled the entire Income Tax feature.
+   
+   EnableChatMessages: true
+   # Displays a message in the chat when an income tax is paid
+   
+   TaxEssentialsPay: true
+   # Taxes when a player pays another player using /pay
+   
+   DefaultTownTax: 0.05
+   # This is a percentage of every transaction where the player gains money
+   # Default = 0.05 (5%)
+   # If you want disable this by default input 0.0
+
+   TownAllowedRanks:
+     - "co-mayor"
+     - "assistant"
+     #- "guard"
+     #- "helper"
+     #- "sheriff"
+   
+   # Town ranks allowed to change their town's income tax rate
+   
+   DefaultNationTax: 0.05
+   # This is a percentage of every transaction where the player gains money
+   # Default = 0.05 (5%)
+   # If you want disable this by default input 0.0
+   
+   NationAllowedRanks:
+     - "assistant"
+     #- "captain"
+     #- "colonel"
+     #- "engineer"
+     #- "general"
+     #- "gunner"
+     #- "helper"
+     #- "lieutenant"
+     #- "major"
+     #- "private"
+     
+   # Nation ranks allowed to change their nation's income tax rate
+   
+   MaxTaxRate: 0.5
+   # The higest rate a town/nation leader can set their income tax rate
+   # Default = 0.5 (50%)

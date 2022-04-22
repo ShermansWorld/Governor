@@ -1,0 +1,17 @@
+name: Governor
+version: 1.1.1
+api-version: 1.18
+author: ShermansWorld
+main: me.ShermansWorld.Governor.Main
+depend: [Vault, Towny]
+
+commands:
+  governor:
+    description: Tax every online player on the server within a town or nation
+    depend: [Vault, Towny]
+  ttax:
+    description: Accepts or denies a town tax
+    depend: [Vault, Towny]
+  ntax:
+    description: Accepts or denies a nation tax
+    depend: [Vault, Towny]
