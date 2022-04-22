@@ -43,7 +43,7 @@ public class GovernorTabCompletion implements TabCompleter {
 			}
 			if (args[0].equalsIgnoreCase("townincometax") || args[0].equalsIgnoreCase("nationincometax")) {
 				completions.add("0.05");
-			} 
+			}
 		}
 		return Collections.emptyList();
 	}

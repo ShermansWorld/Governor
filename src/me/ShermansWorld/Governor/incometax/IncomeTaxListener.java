@@ -39,12 +39,15 @@ public class IncomeTaxListener implements Listener {
 				return;
 			}
 		}
-
-		if (e.getPlayer().getName().substring(0, 5).contentEquals("town_")) {
-			townWithdraw = true;
+		if (e.getPlayer().getName().length() > 5) {
+			if (e.getPlayer().getName().substring(0, 5).contentEquals("town_")) {
+				townWithdraw = true;
+			}
 		}
-		if (e.getPlayer().getName().substring(0, 7).contentEquals("nation_")) {
-			nationWithdraw = true;
+		if (e.getPlayer().getName().length() > 7) {
+			if (e.getPlayer().getName().substring(0, 7).contentEquals("nation_")) {
+				nationWithdraw = true;
+			}
 		}
 		if (e.getOldBalance().compareTo(e.getNewBalance()) == -1) {
 			if (!nationWithdraw && !townWithdraw) {

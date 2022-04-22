@@ -44,14 +44,14 @@ public class GovernorCommands implements CommandExecutor {
 		double amount = 0;
 		
 		if (args.length == 0) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount] &aStarts a &3town &atax call"));
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount] &aStarts a &6nation &atax call"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount/cancel] &aStarts/cancels a &3town &atax call"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
 			if (ConfigVals.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
 			}
 			if (ConfigVals.incomeTaxEnabled) {
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &eincome tax rate (%)"));
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &eincome tax rate (%)"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &aincome tax rate (%)"));
 			}
 			return true;
 		}
@@ -69,21 +69,20 @@ public class GovernorCommands implements CommandExecutor {
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount] &aStarts a &3town &atax call"));
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount] &aStarts a &6nation &atax call"));
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount/cancel] &aStarts/cancels a &3town &atax call"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
 			if (ConfigVals.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
 			}
 			if (ConfigVals.incomeTaxEnabled) {
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &eincome tax rate (%)"));
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &eincome tax rate (%)"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &aincome tax rate (%)"));
 			}
 			return true;
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.1"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.1.1"));
 			return true;
 		}
 
@@ -430,6 +429,12 @@ public class GovernorCommands implements CommandExecutor {
 			}
 		} else if (args[0].equalsIgnoreCase("townincometax")) {
 			
+			if (!ConfigVals.incomeTaxEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cIncome tax is disabled on this server"));
+				return false;
+			}
+			
+			
 			double percent;
 
 			if (args.length != 2) {
@@ -502,6 +507,11 @@ public class GovernorCommands implements CommandExecutor {
 
 		} else if (args[0].equalsIgnoreCase("nationincometax")) {
 			
+			if (!ConfigVals.incomeTaxEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cIncome tax is disabled on this server"));
+				return false;
+			}
+			
 			double percent;
 
 			if (args.length != 2) {
@@ -538,7 +548,7 @@ public class GovernorCommands implements CommandExecutor {
 			if (nationRanks.isEmpty()) {
 				if (!TownyAPI.getInstance().getResident(p).isKing()) {
 					p.sendMessage(Helper.Chatlabel()
-							+ Helper.color("&cYou town rank is not high enough to change the town income tax rate"));
+							+ Helper.color("&cYou nation rank is not high enough to change the nation income tax rate"));
 					return false;
 				}
 			}
@@ -555,7 +565,7 @@ public class GovernorCommands implements CommandExecutor {
 			if (!allowedRank) {
 				if (!TownyAPI.getInstance().getResident(p).isKing()) {
 					p.sendMessage(Helper.Chatlabel()
-							+ Helper.color("&cYou nation rank is not high enough to change the town income tax rate"));
+							+ Helper.color("&cYou nation rank is not high enough to change the nation income tax rate"));
 					return false;
 				}
 			}
