@@ -17,10 +17,10 @@ import me.ShermansWorld.Governor.commands.NationTaxTabCompletion;
 import me.ShermansWorld.Governor.commands.TownTaxCommands;
 import me.ShermansWorld.Governor.commands.TownTaxTabCompletion;
 import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.incometax.IncomeTaxData;
+import me.ShermansWorld.Governor.incometax.IncomeTaxListener;
 import me.ShermansWorld.Governor.taxcalls.NationTaxSession;
 import me.ShermansWorld.Governor.taxcalls.TownTaxSession;
-import me.ShermansWorld.incometax.IncomeTaxData;
-import me.ShermansWorld.incometax.IncomeTaxListener;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {
