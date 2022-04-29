@@ -1,5 +1,5 @@
 # Governor
-## Current Version: BETA-1.1.1
+## Current Version: BETA-1.2
 An Unofficial Towny Expansion Plugin
 
 Governor is an expansion for towny that gives town leaders additional tools. It also allows for players to claim mayorship of inactive towns. An inactive town is defined as a town that's mayor has been inactive for x amount of days (default is 30). 
