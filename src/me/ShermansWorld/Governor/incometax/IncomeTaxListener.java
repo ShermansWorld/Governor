@@ -39,6 +39,28 @@ public class IncomeTaxListener implements Listener {
 				return;
 			}
 		}
+		
+		// Check for disabled hooks
+		if (ChestShopListener.isChestShopPayment) {
+			if (!ConfigVals.chestShopIncomeEnabled) {
+				return;
+			}
+			ChestShopListener.isChestShopPayment = false;
+		}
+		if (JobsListener.isJobsPayment) {
+			if (!ConfigVals.jobsIncomeEnabled) {
+				return;
+			}
+			JobsListener.isJobsPayment = false;
+		}
+		if (QuickShopListener.isQuickShopPayment) {
+			if (!ConfigVals.quickShopIncomeEnabled) {
+				return;
+			}
+			QuickShopListener.isQuickShopPayment = false;
+		}
+		
+		
 		if (e.getPlayer().getName().length() > 5) {
 			if (e.getPlayer().getName().substring(0, 5).contentEquals("town_")) {
 				townWithdraw = true;
@@ -49,58 +71,35 @@ public class IncomeTaxListener implements Listener {
 				nationWithdraw = true;
 			}
 		}
-		if (e.getOldBalance().compareTo(e.getNewBalance()) == -1) {
+		if (e.getOldBalance().compareTo(e.getNewBalance()) == -1) { // if balance net gain
 			if (!nationWithdraw && !townWithdraw) {
 				// income tax
-				Resident r = TownyAPI.getInstance().getResident(e.getPlayer());
-				if (r.hasTown()) {
+				Resident r;
+				try {
+					// income tax
+					r = TownyAPI.getInstance().getResident(e.getPlayer());
+					if (r.hasTown()) {
 
-					double townRate = ConfigVals.defaultTownTax;
-					double nationRate = ConfigVals.defaultNationTax;
+						double townRate = ConfigVals.defaultTownTax;
+						double nationRate = ConfigVals.defaultNationTax;
 
-					if (Main.incomeTownTaxMap.keySet().contains(r.getTownOrNull().getName())) { // if town has set rate
-						townRate = Main.incomeTownTaxMap.get(r.getTownOrNull().getName());
-					}
-					if (r.hasNation()) {
-						if (Main.incomeNationTaxMap.keySet().contains(r.getNationOrNull().getName())) { // if nation has
-																										// set
-							// rate
-							nationRate = Main.incomeNationTaxMap.get(r.getNationOrNull().getName());
+						if (Main.incomeTownTaxMap.keySet().contains(r.getTownOrNull().getName())) { // if town has set rate
+							townRate = Main.incomeTownTaxMap.get(r.getTownOrNull().getName());
 						}
-					}
-
-					BigDecimal income = e.getNewBalance().subtract(e.getOldBalance());
-					BigDecimal townTax = income.multiply(BigDecimal.valueOf(townRate));
-					BigDecimal nationTax = income.multiply(BigDecimal.valueOf(nationRate));
-
-					if (townRate != 0.0 && townTax.intValue() != 0) { // towny banks only work
-						final double rate = townRate; // with ints
-						if (ConfigVals.incomeTaxChatMsgs) {
-							if (e.getPlayer().isOnline()) {
-								Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
-									@Override
-									public void run() {
-										e.getPlayer()
-												.sendMessage(Helper.Taxlabel() + Helper
-														.color("&3Town &bIncome Tax: &c-&a$" + townTax.intValue()
-																+ " &6(" + String.valueOf(rate * 100) + "%)"));
-									}
-								}, 10L); // 20 Tick (1 Second) delay before run() is called
+						if (r.hasNation()) {
+							if (Main.incomeNationTaxMap.keySet().contains(r.getNationOrNull().getName())) { // if nation has
+																											// set
+								// rate
+								nationRate = Main.incomeNationTaxMap.get(r.getNationOrNull().getName());
 							}
 						}
-						try {
-							r.getTownOrNull().depositToBank(r, townTax.intValue());
-						} catch (TownyException e1) {
-						}
-						e.setNewBalance(
-								e.getNewBalance().subtract(BigDecimal.valueOf(Double.valueOf(townTax.intValue()))));
 
-					}
-					if (nationRate != 0.0 && nationTax.intValue() != 0) { // towny banks
-																			// only work
-																			// with ints
-						if (r.hasNation()) {
-							final double rate = nationRate;
+						BigDecimal income = e.getNewBalance().subtract(e.getOldBalance());
+						BigDecimal townTax = income.multiply(BigDecimal.valueOf(townRate));
+						BigDecimal nationTax = income.multiply(BigDecimal.valueOf(nationRate));
+
+						if (townRate != 0.0 && townTax.intValue() != 0) { // towny banks only work
+							final double rate = townRate; // with ints
 							if (ConfigVals.incomeTaxChatMsgs) {
 								if (e.getPlayer().isOnline()) {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
@@ -108,21 +107,50 @@ public class IncomeTaxListener implements Listener {
 										public void run() {
 											e.getPlayer()
 													.sendMessage(Helper.Taxlabel() + Helper
-															.color("&6Nation &bIncome Tax: &c-&a$" + nationTax.intValue()
+															.color("&3Town &bIncome Tax: &c-&a$" + townTax.intValue()
 																	+ " &6(" + String.valueOf(rate * 100) + "%)"));
 										}
 									}, 10L); // 20 Tick (1 Second) delay before run() is called
 								}
 							}
 							try {
-								r.getNation().depositToBank(r, nationTax.intValue());
+								r.getTownOrNull().depositToBank(r, townTax.intValue());
 							} catch (TownyException e1) {
 							}
-							e.setNewBalance(e.getNewBalance()
-									.subtract(BigDecimal.valueOf(Double.valueOf(nationTax.intValue()))));
-						}
+							e.setNewBalance(
+									e.getNewBalance().subtract(BigDecimal.valueOf(Double.valueOf(townTax.intValue()))));
 
+						}
+						if (nationRate != 0.0 && nationTax.intValue() != 0) { // towny banks
+																				// only work
+																				// with ints
+							if (r.hasNation()) {
+								final double rate = nationRate;
+								if (ConfigVals.incomeTaxChatMsgs) {
+									if (e.getPlayer().isOnline()) {
+										Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
+											@Override
+											public void run() {
+												e.getPlayer()
+														.sendMessage(Helper.Taxlabel() + Helper
+																.color("&6Nation &bIncome Tax: &c-&a$" + nationTax.intValue()
+																		+ " &6(" + String.valueOf(rate * 100) + "%)"));
+											}
+										}, 10L); // 20 Tick (1 Second) delay before run() is called
+									}
+								}
+								try {
+									r.getNation().depositToBank(r, nationTax.intValue());
+								} catch (TownyException e1) {
+								}
+								e.setNewBalance(e.getNewBalance()
+										.subtract(BigDecimal.valueOf(Double.valueOf(nationTax.intValue()))));
+							}
+
+						}
 					}
+				} catch (NullPointerException e2) {  // error when getting resident. Clearly not a player or player is not in a town
+					return;
 				}
 			}
 			townWithdraw = false;

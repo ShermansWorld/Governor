@@ -17,8 +17,11 @@ import me.ShermansWorld.Governor.commands.NationTaxTabCompletion;
 import me.ShermansWorld.Governor.commands.TownTaxCommands;
 import me.ShermansWorld.Governor.commands.TownTaxTabCompletion;
 import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.incometax.ChestShopListener;
 import me.ShermansWorld.Governor.incometax.IncomeTaxData;
 import me.ShermansWorld.Governor.incometax.IncomeTaxListener;
+import me.ShermansWorld.Governor.incometax.JobsListener;
+import me.ShermansWorld.Governor.incometax.QuickShopListener;
 import me.ShermansWorld.Governor.taxcalls.NationTaxSession;
 import me.ShermansWorld.Governor.taxcalls.TownTaxSession;
 import net.milkbowl.vault.economy.Economy;
@@ -66,6 +69,21 @@ public class Main extends JavaPlugin {
 		} catch (NullPointerException e) {
 		}
 	}
+	
+	private void enableHooks() {
+		if (Bukkit.getServer().getPluginManager().getPlugin("QuickShop") != null) {
+			  Bukkit.getLogger().info("[Governor] QuickShop detected! Enabling support...");
+			  Bukkit.getPluginManager().registerEvents((Listener) new QuickShopListener(), (Plugin) this);
+		}
+		if (Bukkit.getServer().getPluginManager().getPlugin("ChestShop") != null) {
+			  Bukkit.getLogger().info("[Governor] ChestShop detected! Enabling support...");
+			  Bukkit.getPluginManager().registerEvents((Listener) new ChestShopListener(), (Plugin) this);
+		}
+		if (Bukkit.getServer().getPluginManager().getPlugin("ChestShop") != null) {
+			  Bukkit.getLogger().info("[Governor] Jobs detected! Enabling support...");
+			  Bukkit.getPluginManager().registerEvents((Listener) new JobsListener(), (Plugin) this);
+		}
+	}
 
 	@Override
 	public void onEnable() { // What runs when you start server
@@ -98,6 +116,7 @@ public class Main extends JavaPlugin {
 
 		// Event Listeners
 		Bukkit.getPluginManager().registerEvents((Listener) new IncomeTaxListener(), (Plugin) this);
+		enableHooks();
 
 		// Custom listeners
 		if (ConfigVals.claimEnabled) { // if chain-of-command feature enabled

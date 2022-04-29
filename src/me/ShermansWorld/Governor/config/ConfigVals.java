@@ -3,6 +3,7 @@ package me.ShermansWorld.Governor.config;
 import java.util.List;
 
 import me.ShermansWorld.Governor.Main;
+import me.ShermansWorld.Governor.config.ConfigVals;
 
 public class ConfigVals {
 	
@@ -37,6 +38,10 @@ public class ConfigVals {
 	public static List<String> incomeTaxTownAllowedRanks;
 	public static List<String> incomeTaxNationAllowedRanks;
 	public static double maxTaxRate = 0.5; // default = 50%
+	// Income Tax hooks
+	public static boolean chestShopIncomeEnabled = true; // default = true
+	public static boolean jobsIncomeEnabled = true; // default = true
+	public static boolean quickShopIncomeEnabled = true; // default = true
 	
 	public static void initConfigVals() {
 		
@@ -70,7 +75,10 @@ public class ConfigVals {
 		incomeTaxTownAllowedRanks = Main.getInstance().getConfig().getStringList("IncomeTax.TownAllowedRanks");
 		incomeTaxNationAllowedRanks = Main.getInstance().getConfig().getStringList("IncomeTax.NationAllowedRanks");
 		maxTaxRate = Main.getInstance().getConfig().getDouble("IncomeTax.MaxTaxRate");
-		
+		//income tax hooks
+		chestShopIncomeEnabled = Main.getInstance().getConfig().getBoolean("IncomeTax.EnableChestShopIncome");
+		jobsIncomeEnabled = Main.getInstance().getConfig().getBoolean("IncomeTax.EnableJobsIncome");
+		quickShopIncomeEnabled = Main.getInstance().getConfig().getBoolean("IncomeTax.EnableQuickShopIncome");
 	}
 	
 

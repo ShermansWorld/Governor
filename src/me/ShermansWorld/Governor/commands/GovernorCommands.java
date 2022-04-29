@@ -82,7 +82,7 @@ public class GovernorCommands implements CommandExecutor {
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.1.1"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.2"));
 			return true;
 		}
 
