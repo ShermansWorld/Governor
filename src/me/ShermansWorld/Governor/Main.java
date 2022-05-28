@@ -12,18 +12,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.ShermansWorld.Governor.chainofcommand.InactiveTownListener;
 import me.ShermansWorld.Governor.commands.GovernorCommands;
 import me.ShermansWorld.Governor.commands.GovernorTabCompletion;
-import me.ShermansWorld.Governor.commands.NationTaxCommands;
-import me.ShermansWorld.Governor.commands.NationTaxTabCompletion;
-import me.ShermansWorld.Governor.commands.TownTaxCommands;
-import me.ShermansWorld.Governor.commands.TownTaxTabCompletion;
 import me.ShermansWorld.Governor.config.ConfigVals;
 import me.ShermansWorld.Governor.incometax.ChestShopListener;
 import me.ShermansWorld.Governor.incometax.IncomeTaxData;
 import me.ShermansWorld.Governor.incometax.IncomeTaxListener;
 import me.ShermansWorld.Governor.incometax.JobsListener;
 import me.ShermansWorld.Governor.incometax.QuickShopListener;
+import me.ShermansWorld.Governor.taxcalls.NationTaxCommands;
 import me.ShermansWorld.Governor.taxcalls.NationTaxSession;
+import me.ShermansWorld.Governor.taxcalls.NationTaxTabCompletion;
+import me.ShermansWorld.Governor.taxcalls.TownTaxCommands;
 import me.ShermansWorld.Governor.taxcalls.TownTaxSession;
+import me.ShermansWorld.Governor.taxcalls.TownTaxTabCompletion;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {

@@ -8,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 
 import me.ShermansWorld.Governor.chainofcommand.InactiveTownListener;
@@ -27,6 +29,7 @@ public class GovernorTabCompletion implements TabCompleter {
 			completions.add("taxnation");
 			if (ConfigVals.claimEnabled) {
 				completions.add("claim");
+				completions.add("checkmayor");
 			}
 			if (ConfigVals.incomeTaxEnabled) {
 				completions.add("townincometax");
@@ -40,9 +43,16 @@ public class GovernorTabCompletion implements TabCompleter {
 				for (Town town : InactiveTownListener.inactiveTowns) {
 					completions.add(town.getName());
 				}
+				return completions;
+			}
+			if (args[0].equalsIgnoreCase("checkmayor")) {
+				for (Town town : TownyAPI.getInstance().getTowns()) {
+					completions.add(town.getName());
+				}
 			}
 			if (args[0].equalsIgnoreCase("townincometax") || args[0].equalsIgnoreCase("nationincometax")) {
 				completions.add("0.05");
+				return completions;
 			}
 		}
 		return Collections.emptyList();

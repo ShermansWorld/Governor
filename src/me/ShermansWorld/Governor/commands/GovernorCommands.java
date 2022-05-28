@@ -48,6 +48,7 @@ public class GovernorCommands implements CommandExecutor {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
 			if (ConfigVals.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor checkmayor [town] &aCheck how many days a mayor has been offline"));
 			}
 			if (ConfigVals.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
@@ -73,6 +74,7 @@ public class GovernorCommands implements CommandExecutor {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
 			if (ConfigVals.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor checkmayor [town] &aCheck how many days a mayor has been offline"));
 			}
 			if (ConfigVals.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
@@ -82,7 +84,7 @@ public class GovernorCommands implements CommandExecutor {
 		}
 		
 		if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
-			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.2"));
+			p.sendMessage(Helper.Chatlabel() + Helper.color("&aVersion: &6BETA-1.2.1"));
 			return true;
 		}
 
@@ -414,7 +416,7 @@ public class GovernorCommands implements CommandExecutor {
 							}
 						} catch (NotRegisteredException e) {
 							p.sendMessage(
-									Helper.Chatlabel() + "&cYou must be in " + t.getName() + " to claim mayorship");
+									Helper.Chatlabel() + Helper.color("&cYou must be in " + t.getName() + " to claim mayorship"));
 							return false;
 						}
 					}
@@ -423,10 +425,60 @@ public class GovernorCommands implements CommandExecutor {
 									+ String.valueOf(ConfigVals.daysInactive) + " days"));
 					return false;
 				} else {
-					p.sendMessage(Helper.Chatlabel() + "&cYou must be in a town to claim mayorship");
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou must be in a town to claim mayorship"));
 					return false;
 				}
 			}
+		} else if (args[0].equalsIgnoreCase("checkmayor")) {
+			
+			if (!ConfigVals.claimEnabled) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cChain-of-Command is not enabled on this server"));
+				return false;
+			}
+			if (args.length == 1) {
+				try {
+					town = TownyAPI.getInstance().getResident(p).getTown();
+				} catch (NotRegisteredException e) {
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou are not in a town"));
+					return false;
+				}
+				Resident mayor = town.getMayor();
+				if (mayor.isOnline()) {
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&cThe mayor of &e" + town.getName() + " &cis online"));
+					return false;
+				} else {
+					long now = System.currentTimeMillis();
+					long lastOnline = mayor.getLastOnline();
+					long milisecPerDay = 1000 * 60 * 60 * 24;
+					lastOnline = ((now - lastOnline)/milisecPerDay);
+					int daysOffline = (int) lastOnline;
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&b" + mayor.getName() + "&a, the mayor of &3" + town.getName() + " &ahas been offline for &6" + String.valueOf(daysOffline) + " days"));
+					return true;
+				}
+			} else if (args.length == 2) {
+				town = TownyAPI.getInstance().getTown(args[1]);
+				if (!TownyAPI.getInstance().getTowns().contains(town)) {
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&cThe town you entered does not exist!"));
+					return false;
+				}
+				Resident mayor = town.getMayor();
+				if (mayor.isOnline()) {
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&cThe mayor of &e" + town.getName() + " &cis online"));
+					return false;
+				} else {
+					long now = System.currentTimeMillis();
+					long lastOnline = mayor.getLastOnline();
+					long milisecPerDay = 1000 * 60 * 60 * 24;
+					lastOnline = ((now - lastOnline)/milisecPerDay);
+					int daysOffline = (int) lastOnline;
+					p.sendMessage(Helper.Chatlabel() + Helper.color("&b" + mayor.getName() + "&a, the mayor of &3" + town.getName() + " &ahas been offline for &6" + String.valueOf(daysOffline) + " days"));
+					return true;
+				}
+			} else {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cInvalid arguments. Usage: &e/governor checkmayor [town]"));
+				return false;
+			}
+
 		} else if (args[0].equalsIgnoreCase("townincometax")) {
 			
 			if (!ConfigVals.incomeTaxEnabled) {
