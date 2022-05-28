@@ -3,7 +3,7 @@
 # | An Unofficial Towny Expansion Plugin |
 # ========================================
 
-config-version: 2
+config-version: 3
 
 # =====================================
 # |          TAX CALL SETTINGS        |
@@ -102,7 +102,7 @@ ChainOfCommand:
 
 # This is an EXPERIMENTAL FEATURE which taxes all income streams for players and automatically routes it to the town/nation bank
 # This feature is new and is in the TESTING phase. If you find a bug please report it at https://github.com/ShermansWorld/Governor
-# It is difficult to determine what effect this will have on your server since all server ecnomies are different
+# It is difficult to determine what effect this will have on your server since all server economies are different
 # If you are experiencing any problems with this feature I recommend disabling it below
 
 IncomeTax:
@@ -152,3 +152,17 @@ IncomeTax:
    MaxTaxRate: 0.5
    # The higest rate a town/nation leader can set their income tax rate
    # Default = 0.5 (50%)
+   
+   # ===== INCOME TAX HOOKS =====
+   # Global settings for additional economy plugins. These plugins are supported but are NOT REQUIRED to use Governor's Income Tax feature
+   # If you would like to request support for a new hook request it here: https://github.com/ShermansWorld/Governor/issues
+   
+   EnableChestShopIncome: True
+   # Enables/Disables taxing income from ChestShop shops
+   
+   EnableJobsIncome: True
+   # Enables/Disables taxing income from jobs
+   # Note: Incomes will only be taxed if the tax amount is over $1 due to Towny banks working in whole numbers only. This is NOT a bug!
+   
+   EnableQuickShopIncome: True
+   # Enables/Disables taxing income from QuickShop shops
