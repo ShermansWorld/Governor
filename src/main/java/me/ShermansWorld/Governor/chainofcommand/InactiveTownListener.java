@@ -11,8 +11,8 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
 import me.ShermansWorld.Governor.Helper;
-import me.ShermansWorld.Governor.Main;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.Governor;
+import me.ShermansWorld.Governor.config.Config;
 
 public class InactiveTownListener {
 
@@ -23,7 +23,7 @@ public class InactiveTownListener {
 		final List<Resident> mayors = new ArrayList<Resident>();
 		inactiveTowns = new ArrayList<Town>();
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), new Runnable() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Governor.getInstance(), new Runnable() {
 			public void run() {
 				List<Town> towns = TownyAPI.getInstance().getTowns();
 				mayors.clear();
@@ -40,7 +40,7 @@ public class InactiveTownListener {
 								long lastOnline = now - lastPlayed; // miliseconds player has been offline
 								long milisecPerDay = 1000 * 60 * 60 * 24; // 1000 milisec/sec * 60 sec/min * 60 min/hr *
 																			// 24 hr/day
-								long limit = milisecPerDay * ConfigVals.daysInactive;
+								long limit = milisecPerDay * Config.daysInactive;
 								//long limit = 100; //short timer for testing
 								if (lastOnline > limit) {
 									try {

@@ -7,18 +7,18 @@ import java.io.Reader;
 import java.io.InputStreamReader;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.ShermansWorld.Governor.Main;
+import me.ShermansWorld.Governor.Governor;
 
 import java.io.File;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class IncomeTaxData
 {
-    private Main plugin;
+    private Governor plugin;
     private FileConfiguration dataConfig;
     private File configFile;
     
-    public IncomeTaxData(Main plugin) {
+    public IncomeTaxData(Governor plugin) {
         dataConfig = null;
         configFile = null;
         this.plugin = plugin;

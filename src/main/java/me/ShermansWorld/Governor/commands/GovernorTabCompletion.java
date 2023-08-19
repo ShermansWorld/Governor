@@ -13,7 +13,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 
 import me.ShermansWorld.Governor.chainofcommand.InactiveTownListener;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.config.Config;
 
 public class GovernorTabCompletion implements TabCompleter {
 
@@ -27,11 +27,11 @@ public class GovernorTabCompletion implements TabCompleter {
 			}
 			completions.add("taxtown");
 			completions.add("taxnation");
-			if (ConfigVals.claimEnabled) {
+			if (Config.claimEnabled) {
 				completions.add("claim");
 				completions.add("checkmayor");
 			}
-			if (ConfigVals.incomeTaxEnabled) {
+			if (Config.incomeTaxEnabled) {
 				completions.add("townincometax");
 				completions.add("nationincometax");
 			}

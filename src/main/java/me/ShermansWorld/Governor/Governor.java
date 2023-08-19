@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.ShermansWorld.Governor.chainofcommand.InactiveTownListener;
 import me.ShermansWorld.Governor.commands.GovernorCommands;
 import me.ShermansWorld.Governor.commands.GovernorTabCompletion;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.config.Config;
 import me.ShermansWorld.Governor.incometax.ChestShopListener;
 import me.ShermansWorld.Governor.incometax.IncomeTaxData;
 import me.ShermansWorld.Governor.incometax.IncomeTaxListener;
@@ -26,9 +26,9 @@ import me.ShermansWorld.Governor.taxcalls.TownTaxSession;
 import me.ShermansWorld.Governor.taxcalls.TownTaxTabCompletion;
 import net.milkbowl.vault.economy.Economy;
 
-public class Main extends JavaPlugin {
+public class Governor extends JavaPlugin {
 
-	public static Main instance;
+	public static Governor instance;
 	public static Economy economy = null;
 
 	public static IncomeTaxData incomeTaxData;
@@ -38,8 +38,8 @@ public class Main extends JavaPlugin {
 	public static HashMap<String, Double> incomeTownTaxMap = new HashMap<String, Double>();
 	public static HashMap<String, Double> incomeNationTaxMap = new HashMap<String, Double>();
 
-	public static Main getInstance() {
-		return Main.instance;
+	public static Governor getInstance() {
+		return Governor.instance;
 	}
 
 	private boolean setupEconomy() {
@@ -88,12 +88,11 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() { // What runs when you start server
 		// setup main
-		this.saveDefaultConfig();
-		Main.instance = this;
+		Governor.instance = this;
 
 		// initialize config
-		ConfigVals.initConfigVals();
-		// ConfigChecker.V1ToV2();
+		saveDefaultConfig();
+		Config.initConfigVals();
 
 		// initialize custom data files
 		initData();
@@ -119,7 +118,7 @@ public class Main extends JavaPlugin {
 		enableHooks();
 
 		// Custom listeners
-		if (ConfigVals.claimEnabled) { // if chain-of-command feature enabled
+		if (Config.claimEnabled) { // if chain-of-command feature enabled
 			InactiveTownListener.initListener();
 		}
 	}

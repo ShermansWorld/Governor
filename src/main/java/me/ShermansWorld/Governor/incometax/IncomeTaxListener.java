@@ -11,8 +11,8 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Resident;
 
 import me.ShermansWorld.Governor.Helper;
-import me.ShermansWorld.Governor.Main;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.Governor;
+import me.ShermansWorld.Governor.config.Config;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import net.ess3.api.events.UserBalanceUpdateEvent.Cause;
 
@@ -26,7 +26,7 @@ public class IncomeTaxListener implements Listener {
 		// Bukkit.broadcastMessage(e.getPlayer().getName()); // print player or "bank"
 		// name. Used for testing
 
-		if (!ConfigVals.incomeTaxEnabled) {
+		if (!Config.incomeTaxEnabled) {
 			return;
 		}
 
@@ -35,26 +35,26 @@ public class IncomeTaxListener implements Listener {
 		}
 
 		if (e.getCause().equals(Cause.COMMAND_PAY)) { // do not tax /pay if it is disabled in config
-			if (!ConfigVals.taxEssentialsPay) {
+			if (!Config.taxEssentialsPay) {
 				return;
 			}
 		}
 		
 		// Check for disabled hooks
 		if (ChestShopListener.isChestShopPayment) {
-			if (!ConfigVals.chestShopIncomeEnabled) {
+			if (!Config.chestShopIncomeEnabled) {
 				return;
 			}
 			ChestShopListener.isChestShopPayment = false;
 		}
 		if (JobsListener.isJobsPayment) {
-			if (!ConfigVals.jobsIncomeEnabled) {
+			if (!Config.jobsIncomeEnabled) {
 				return;
 			}
 			JobsListener.isJobsPayment = false;
 		}
 		if (QuickShopListener.isQuickShopPayment) {
-			if (!ConfigVals.quickShopIncomeEnabled) {
+			if (!Config.quickShopIncomeEnabled) {
 				return;
 			}
 			QuickShopListener.isQuickShopPayment = false;
@@ -80,17 +80,17 @@ public class IncomeTaxListener implements Listener {
 					r = TownyAPI.getInstance().getResident(e.getPlayer());
 					if (r.hasTown()) {
 
-						double townRate = ConfigVals.defaultTownTax;
-						double nationRate = ConfigVals.defaultNationTax;
+						double townRate = Config.defaultTownTax;
+						double nationRate = Config.defaultNationTax;
 
-						if (Main.incomeTownTaxMap.keySet().contains(r.getTownOrNull().getName())) { // if town has set rate
-							townRate = Main.incomeTownTaxMap.get(r.getTownOrNull().getName());
+						if (Governor.incomeTownTaxMap.keySet().contains(r.getTownOrNull().getName())) { // if town has set rate
+							townRate = Governor.incomeTownTaxMap.get(r.getTownOrNull().getName());
 						}
 						if (r.hasNation()) {
-							if (Main.incomeNationTaxMap.keySet().contains(r.getNationOrNull().getName())) { // if nation has
+							if (Governor.incomeNationTaxMap.keySet().contains(r.getNationOrNull().getName())) { // if nation has
 																											// set
 								// rate
-								nationRate = Main.incomeNationTaxMap.get(r.getNationOrNull().getName());
+								nationRate = Governor.incomeNationTaxMap.get(r.getNationOrNull().getName());
 							}
 						}
 
@@ -100,9 +100,9 @@ public class IncomeTaxListener implements Listener {
 
 						if (townRate != 0.0 && townTax.intValue() != 0) { // towny banks only work
 							final double rate = townRate; // with ints
-							if (ConfigVals.incomeTaxChatMsgs) {
+							if (Config.incomeTaxChatMsgs) {
 								if (e.getPlayer().isOnline()) {
-									Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
+									Bukkit.getScheduler().scheduleSyncDelayedTask(Governor.getInstance(), new Runnable() {
 										@Override
 										public void run() {
 											e.getPlayer()
@@ -126,9 +126,9 @@ public class IncomeTaxListener implements Listener {
 																				// with ints
 							if (r.hasNation()) {
 								final double rate = nationRate;
-								if (ConfigVals.incomeTaxChatMsgs) {
+								if (Config.incomeTaxChatMsgs) {
 									if (e.getPlayer().isOnline()) {
-										Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
+										Bukkit.getScheduler().scheduleSyncDelayedTask(Governor.getInstance(), new Runnable() {
 											@Override
 											public void run() {
 												e.getPlayer()

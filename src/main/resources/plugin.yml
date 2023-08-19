@@ -2,7 +2,7 @@ name: Governor
 version: 1.2.2
 api-version: 1.18
 author: ShermansWorld
-main: me.ShermansWorld.Governor.Main
+main: me.ShermansWorld.Governor.Governor
 depend: [Vault, Towny]
 softdepend: [Essentials, ChestShop, Jobs, QuickShop]
 

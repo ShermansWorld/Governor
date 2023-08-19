@@ -11,13 +11,13 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 
 import me.ShermansWorld.Governor.Helper;
-import me.ShermansWorld.Governor.Main;
+import me.ShermansWorld.Governor.Governor;
 import me.ShermansWorld.Governor.taxcalls.NationTaxSession;
 
 
 public class NationTaxCommands implements CommandExecutor {
 
-	public NationTaxCommands(Main plugin) {
+	public NationTaxCommands(Governor plugin) {
 		plugin.getCommand("ntax").setExecutor((CommandExecutor) this); // command to run in chat
 	}
 
@@ -47,7 +47,7 @@ public class NationTaxCommands implements CommandExecutor {
 		} else {
 			boolean taxSessionExists = false;
 			NationTaxSession nationTaxSession = null;
-			for (NationTaxSession taxSession : Main.nationTaxSessions) { // remove from main list, close tax session
+			for (NationTaxSession taxSession : Governor.nationTaxSessions) { // remove from main list, close tax session
 				if (taxSession.getNation().equals(nation)) {
 					taxSessionExists = true;
 					nationTaxSession = taxSession;
@@ -89,7 +89,7 @@ public class NationTaxCommands implements CommandExecutor {
 				}
 				nationTaxSession.getTaxablePlayers().remove(p);
 				nationTaxSession.getAcceptedTax().add(p);
-				Main.economy.withdrawPlayer(p, nationTaxSession.getTaxAmount());
+				Governor.economy.withdrawPlayer(p, nationTaxSession.getTaxAmount());
 				nation.getAccount().deposit(nationTaxSession.getTaxAmount(), "Member Tax");
 				nationTaxSession.getMayor().sendMessage(Helper.Chatlabel() + Helper.color("&b" + p.getName() + " &ahas paid the &6nation &atax"));
 				p.sendMessage(Helper.Taxlabel() + Helper.color("&bYou have paid the &6nation &btax of &6$" + String.valueOf(nationTaxSession.getTaxAmount()) + "&b to the bank of &e" + nationTaxSession.getNation()));

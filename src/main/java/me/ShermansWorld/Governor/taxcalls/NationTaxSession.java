@@ -10,8 +10,8 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 
 import me.ShermansWorld.Governor.Helper;
-import me.ShermansWorld.Governor.Main;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.Governor;
+import me.ShermansWorld.Governor.config.Config;
 
 public class NationTaxSession {
 
@@ -42,17 +42,17 @@ public class NationTaxSession {
 		mayor.sendMessage(Helper.Chatlabel() + Helper.color(
 				"&aA tax of &6$" + String.valueOf(amount) + " &ahas been requested for online &6nation &amembers"));
 
-		id = Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
+		id = Bukkit.getScheduler().scheduleSyncDelayedTask(Governor.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				isTaxing = false;
 				if (!isCanceled) {
 					mayor.sendMessage(Helper.Chatlabel() + Helper.color("&aThe &6nation &atax call has ended"));
-					if (!Main.nationTaxSessions.isEmpty()) {
-						for (int i = 0; i < Main.nationTaxSessions.size(); i++) { // remove from main list, close tax
+					if (!Governor.nationTaxSessions.isEmpty()) {
+						for (int i = 0; i < Governor.nationTaxSessions.size(); i++) { // remove from main list, close tax
 																					// session
-							if (Main.nationTaxSessions.get(i).getNation().equals(nation)) {
-								Main.nationTaxSessions.remove(i);
+							if (Governor.nationTaxSessions.get(i).getNation().equals(nation)) {
+								Governor.nationTaxSessions.remove(i);
 								break;
 							}
 						}
@@ -65,7 +65,7 @@ public class NationTaxSession {
 					}
 				}
 			}
-		}, ConfigVals.maxNationTaxCallTime); // 100L = 5 seconds
+		}, Config.maxNationTaxCallTime); // 100L = 5 seconds
 
 		for (int i = 0; i < residents.size(); i++) {
 			if (residents.get(i).getName() == null) {
@@ -77,7 +77,7 @@ public class NationTaxSession {
 					player.sendMessage(Helper.Chatlabel()
 							+ Helper.color("&2" + mayor.getName() + " &ahas called for a &6nation &atax of &6$"
 									+ String.valueOf(amount) + " &afor all online town members."));
-					if (Main.economy.getBalance(player) > amount) {
+					if (Governor.economy.getBalance(player) > amount) {
 						taxablePlayers.add(player);
 						player.sendMessage(
 								Helper.Chatlabel() + Helper.color("&aType &e/ntax accept &aor &e/ntax deny"));
@@ -87,8 +87,8 @@ public class NationTaxSession {
 						mayor.sendMessage(Helper.Chatlabel() + Helper.color("&b" + player.getName()
 								+ " &awas &6exempt &afrom this &6nation &atax due to a low balance"));
 					}
-				} else if (onlinePlayers.contains(resident.getPlayer()) && resident.getPlayer().equals(mayor) && ConfigVals.nationAskCaller) {
-					if (Main.economy.getBalance(player) > amount) {
+				} else if (onlinePlayers.contains(resident.getPlayer()) && resident.getPlayer().equals(mayor) && Config.nationAskCaller) {
+					if (Governor.economy.getBalance(player) > amount) {
 						taxablePlayers.add(player);
 						player.sendMessage(
 								Helper.Chatlabel() + Helper.color("&aType &e/ntax accept &aor &e/ntax deny"));

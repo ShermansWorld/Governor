@@ -17,16 +17,16 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
+import me.ShermansWorld.Governor.Governor;
 import me.ShermansWorld.Governor.Helper;
-import me.ShermansWorld.Governor.Main;
 import me.ShermansWorld.Governor.chainofcommand.InactiveTownListener;
-import me.ShermansWorld.Governor.config.ConfigVals;
+import me.ShermansWorld.Governor.config.Config;
 import me.ShermansWorld.Governor.taxcalls.NationTaxSession;
 import me.ShermansWorld.Governor.taxcalls.TownTaxSession;
 
 public class GovernorCommands implements CommandExecutor {
 
-	public GovernorCommands(Main plugin) {
+	public GovernorCommands(Governor plugin) {
 		plugin.getCommand("governor").setExecutor((CommandExecutor) this); // command to run in chat
 	}
 
@@ -46,11 +46,11 @@ public class GovernorCommands implements CommandExecutor {
 		if (args.length == 0) {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount/cancel] &aStarts/cancels a &3town &atax call"));
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
-			if (ConfigVals.claimEnabled) {
+			if (Config.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor checkmayor [town] &aCheck how many days a mayor has been offline"));
 			}
-			if (ConfigVals.incomeTaxEnabled) {
+			if (Config.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &aincome tax rate (%)"));
 			}
@@ -62,9 +62,9 @@ public class GovernorCommands implements CommandExecutor {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou do not have permission to do this"));
 				return false;
 			}
-			Main.getInstance().reloadConfig();
-			Main.getInstance().saveDefaultConfig();
-			ConfigVals.initConfigVals();
+			Governor.getInstance().reloadConfig();
+			Governor.getInstance().saveDefaultConfig();
+			Config.initConfigVals();
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&econfig.yml reloaded"));
 			return true;
 		}
@@ -72,11 +72,11 @@ public class GovernorCommands implements CommandExecutor {
 		if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxtown [amount/cancel] &aStarts/cancels a &3town &atax call"));
 			p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor taxnation [amount/cancel] &aStarts/cancels a &6nation &atax call"));
-			if (ConfigVals.claimEnabled) {
+			if (Config.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor claim &aClaim mayorship of an inactive town"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor checkmayor [town] &aCheck how many days a mayor has been offline"));
 			}
-			if (ConfigVals.incomeTaxEnabled) {
+			if (Config.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor townincometax &aSet the &3town &aincome tax rate (%)"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&e/governor nationincometax &aSet the &6nation &aincome tax rate (%)"));
 			}
@@ -104,17 +104,17 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			if (args[1].equalsIgnoreCase("cancel")) {
-				if (Main.townTaxSessions.isEmpty()) {
+				if (Governor.townTaxSessions.isEmpty()) {
 					p.sendMessage(Helper.Chatlabel()
 							+ Helper.color("&cThere is currently no tax call for " + town.getName()));
 					return false;
 				}
-				for (int i = 0; i < Main.townTaxSessions.size(); i++) { // check for an existing tax session
-					if (Main.townTaxSessions.get(i).getTown().equals(town)) {
-						if (p.equals(town.getMayor().getPlayer()) || Main.townTaxSessions.get(i).getMayor().equals(p)) { 
-							Main.townTaxSessions.get(i).setTaxingStatus(false);
-							Main.townTaxSessions.get(i).cancel(p);
-							Main.townTaxSessions.remove(i);
+				for (int i = 0; i < Governor.townTaxSessions.size(); i++) { // check for an existing tax session
+					if (Governor.townTaxSessions.get(i).getTown().equals(town)) {
+						if (p.equals(town.getMayor().getPlayer()) || Governor.townTaxSessions.get(i).getMayor().equals(p)) { 
+							Governor.townTaxSessions.get(i).setTaxingStatus(false);
+							Governor.townTaxSessions.get(i).cancel(p);
+							Governor.townTaxSessions.remove(i);
 							p.sendMessage(Helper.Chatlabel() + Helper.color("&3Town &atax call has been canceled"));
 							return true;
 						} else {
@@ -129,7 +129,7 @@ public class GovernorCommands implements CommandExecutor {
 				return false;
 			}
 
-			for (TownTaxSession taxSession : Main.townTaxSessions) { // check for an existing tax session
+			for (TownTaxSession taxSession : Governor.townTaxSessions) { // check for an existing tax session
 				if (taxSession.getTown().equals(town)) {
 					if (taxSession.isTaxing()) {
 						p.sendMessage(Helper.Chatlabel() + Helper.color(
@@ -147,7 +147,7 @@ public class GovernorCommands implements CommandExecutor {
 				return false;
 			}
 
-			maxAmount = Double.valueOf(ConfigVals.maxTownTaxAmount);
+			maxAmount = Double.valueOf(Config.maxTownTaxAmount);
 
 			if (amount > maxAmount) {
 				p.sendMessage(Helper.Chatlabel() + Helper
@@ -168,9 +168,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			boolean allowedRank = false;
-			for (int i = 0; i < ConfigVals.taxTownAllowedRanks.size(); i++) {
+			for (int i = 0; i < Config.taxTownAllowedRanks.size(); i++) {
 				for (int j = 0; j < townRanks.size(); j++) {
-					if (townRanks.get(j).equalsIgnoreCase(ConfigVals.taxTownAllowedRanks.get(i))) {
+					if (townRanks.get(j).equalsIgnoreCase(Config.taxTownAllowedRanks.get(i))) {
 						allowedRank = true;
 					}
 				}
@@ -185,7 +185,7 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			TownTaxSession taxSession = new TownTaxSession(p, town, amount);
-			Main.townTaxSessions.add(taxSession);
+			Governor.townTaxSessions.add(taxSession);
 			taxSession.init();
 
 			return true;
@@ -205,18 +205,18 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			if (args[1].equalsIgnoreCase("cancel")) {
-				if (Main.nationTaxSessions.isEmpty()) {
+				if (Governor.nationTaxSessions.isEmpty()) {
 					p.sendMessage(Helper.Chatlabel()
 							+ Helper.color("&cThere is currently no tax call for " + nation.getName()));
 				}
-				for (int i = 0; i < Main.nationTaxSessions.size(); i++) { // check for an existing tax session
-					if (Main.nationTaxSessions.get(i).getNation().equals(nation)) {
+				for (int i = 0; i < Governor.nationTaxSessions.size(); i++) { // check for an existing tax session
+					if (Governor.nationTaxSessions.get(i).getNation().equals(nation)) {
 						if (p.equals(nation.getKing().getPlayer())
-								|| Main.nationTaxSessions.get(i).getMayor().equals(p)) { // if the player is mayor or
+								|| Governor.nationTaxSessions.get(i).getMayor().equals(p)) { // if the player is mayor or
 																							// they started the tax call
-							Main.nationTaxSessions.get(i).setTaxingStatus(false);
-							Main.nationTaxSessions.get(i).cancel(p);
-							Main.nationTaxSessions.remove(i);
+							Governor.nationTaxSessions.get(i).setTaxingStatus(false);
+							Governor.nationTaxSessions.get(i).cancel(p);
+							Governor.nationTaxSessions.remove(i);
 							p.sendMessage(Helper.Chatlabel() + Helper.color("&6Nation &atax call has been canceled"));
 							return true;
 						} else {
@@ -231,7 +231,7 @@ public class GovernorCommands implements CommandExecutor {
 				return false;
 			}
 
-			for (NationTaxSession taxSession : Main.nationTaxSessions) { // check for an existing tax session
+			for (NationTaxSession taxSession : Governor.nationTaxSessions) { // check for an existing tax session
 				if (taxSession.getNation().equals(nation)) {
 					if (taxSession.isTaxing()) {
 						p.sendMessage(Helper.Chatlabel() + Helper.color(
@@ -249,7 +249,7 @@ public class GovernorCommands implements CommandExecutor {
 				return false;
 			}
 
-			maxAmount = Double.valueOf(ConfigVals.maxNationTaxAmount);
+			maxAmount = Double.valueOf(Config.maxNationTaxAmount);
 
 			if (amount > maxAmount) {
 				p.sendMessage(Helper.Chatlabel() + Helper
@@ -269,9 +269,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			boolean allowedRank = false;
-			for (int i = 0; i < ConfigVals.taxNationAllowedRanks.size(); i++) {
+			for (int i = 0; i < Config.taxNationAllowedRanks.size(); i++) {
 				for (int j = 0; j < nationRanks.size(); j++) {
-					if (nationRanks.get(j).equalsIgnoreCase(ConfigVals.taxNationAllowedRanks.get(i))) {
+					if (nationRanks.get(j).equalsIgnoreCase(Config.taxNationAllowedRanks.get(i))) {
 						allowedRank = true;
 					}
 				}
@@ -286,21 +286,21 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			NationTaxSession taxSession = new NationTaxSession(p, nation, amount);
-			Main.nationTaxSessions.add(taxSession);
+			Governor.nationTaxSessions.add(taxSession);
 			taxSession.init();
 
 			return true;
 
 		} else if (args[0].equalsIgnoreCase("claim")) {
 			
-			if (!ConfigVals.claimEnabled) {
+			if (!Config.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cChain-of-Command is not enabled on this server"));
 				return false;
 			}
 
 			Resident newMayor = TownyAPI.getInstance().getResident(p);
 
-			if (ConfigVals.anyoneCanClaim || ConfigVals.anyNationMemberCanClaim) {
+			if (Config.anyoneCanClaim || Config.anyNationMemberCanClaim) {
 				if (args.length != 2) {
 					p.sendMessage(Helper.Chatlabel() + Helper.color("&cInvalid Input: Usage &e/governor claim [town]"));
 					return false;
@@ -326,11 +326,11 @@ public class GovernorCommands implements CommandExecutor {
 				if (!townExists) {
 					p.sendMessage(Helper.Chatlabel() + Helper
 							.color("&cYou can only claim mayorship if the town's mayor has been inactive for over &6"
-									+ String.valueOf(ConfigVals.daysInactive) + " days"));
+									+ String.valueOf(Config.daysInactive) + " days"));
 					return false;
 				}
 
-				if (!ConfigVals.anyoneCanClaim) { // if nation member trying to claim
+				if (!Config.anyoneCanClaim) { // if nation member trying to claim
 					try {
 						if (!newMayor.getNation().equals(target.getNation())) {
 							p.sendMessage(Helper.Chatlabel() + Helper
@@ -367,14 +367,14 @@ public class GovernorCommands implements CommandExecutor {
 				Bukkit.broadcastMessage(
 						Helper.Chatlabel() + Helper.color("&5" + p.getName() + " &ahas claimed mayorship of &e"
 								+ target.getName() + " &adue to the prior mayor being inactive for over &6"
-								+ String.valueOf(ConfigVals.daysInactive) + " days"));
+								+ String.valueOf(Config.daysInactive) + " days"));
 				return true;
 			} else {
 				if (newMayor.hasTown()) {
 					for (Town t : InactiveTownListener.inactiveTowns) {
 						try {
 							if (newMayor.getTown().equals(t)) {
-								if (!ConfigVals.anyTownMemberCanClaim) {
+								if (!Config.anyTownMemberCanClaim) {
 
 									List<String> townRanks = newMayor.getTownRanks();
 									if (townRanks.isEmpty()) {
@@ -388,10 +388,10 @@ public class GovernorCommands implements CommandExecutor {
 									}
 
 									boolean allowedRank = false;
-									for (int i = 0; i < ConfigVals.claimAllowedRanks.size(); i++) {
+									for (int i = 0; i < Config.claimAllowedRanks.size(); i++) {
 										for (int j = 0; j < townRanks.size(); j++) {
 											if (townRanks.get(j)
-													.equalsIgnoreCase(ConfigVals.claimAllowedRanks.get(i))) {
+													.equalsIgnoreCase(Config.claimAllowedRanks.get(i))) {
 												allowedRank = true;
 											}
 										}
@@ -411,7 +411,7 @@ public class GovernorCommands implements CommandExecutor {
 								Bukkit.broadcastMessage(
 										Helper.Chatlabel() + Helper.color("&5" + p.getName() + " &ahas claimed mayorship of &e"
 												+ t.getName() + " &adue to the prior mayor being inactive for over &6"
-												+ String.valueOf(ConfigVals.daysInactive) + " days"));
+												+ String.valueOf(Config.daysInactive) + " days"));
 								return true;
 							}
 						} catch (NotRegisteredException e) {
@@ -422,7 +422,7 @@ public class GovernorCommands implements CommandExecutor {
 					}
 					p.sendMessage(Helper.Chatlabel() + Helper
 							.color("&cYou can only claim mayorship if your town's mayor has been inactive for over &6"
-									+ String.valueOf(ConfigVals.daysInactive) + " days"));
+									+ String.valueOf(Config.daysInactive) + " days"));
 					return false;
 				} else {
 					p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou must be in a town to claim mayorship"));
@@ -431,7 +431,7 @@ public class GovernorCommands implements CommandExecutor {
 			}
 		} else if (args[0].equalsIgnoreCase("checkmayor")) {
 			
-			if (!ConfigVals.claimEnabled) {
+			if (!Config.claimEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cChain-of-Command is not enabled on this server"));
 				return false;
 			}
@@ -481,7 +481,7 @@ public class GovernorCommands implements CommandExecutor {
 
 		} else if (args[0].equalsIgnoreCase("townincometax")) {
 			
-			if (!ConfigVals.incomeTaxEnabled) {
+			if (!Config.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cIncome tax is disabled on this server"));
 				return false;
 			}
@@ -511,8 +511,8 @@ public class GovernorCommands implements CommandExecutor {
 			}
 			
 		
-			if (percent > ConfigVals.maxTaxRate) {
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou cannot set an income tax above " + String.valueOf(ConfigVals.maxTaxRate*100) + "%"));
+			if (percent > Config.maxTaxRate) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou cannot set an income tax above " + String.valueOf(Config.maxTaxRate*100) + "%"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cExample: '0.05' = 5% income tax"));
 				return false;
 			}
@@ -529,9 +529,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			boolean allowedRank = false;
-			for (int i = 0; i < ConfigVals.incomeTaxTownAllowedRanks.size(); i++) {
+			for (int i = 0; i < Config.incomeTaxTownAllowedRanks.size(); i++) {
 				for (int j = 0; j < townRanks.size(); j++) {
-					if (townRanks.get(j).equalsIgnoreCase(ConfigVals.incomeTaxTownAllowedRanks.get(i))) {
+					if (townRanks.get(j).equalsIgnoreCase(Config.incomeTaxTownAllowedRanks.get(i))) {
 						allowedRank = true;
 					}
 				}
@@ -546,9 +546,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 			
 			try {
-				Main.incomeTownTaxMap.put(TownyAPI.getInstance().getResident(p).getTown().getName(), percent);
-				Main.incomeTaxData.getConfig().set("Towns." + TownyAPI.getInstance().getResident(p).getTown().getName(), percent);
-				Main.incomeTaxData.saveConfig();
+				Governor.incomeTownTaxMap.put(TownyAPI.getInstance().getResident(p).getTown().getName(), percent);
+				Governor.incomeTaxData.getConfig().set("Towns." + TownyAPI.getInstance().getResident(p).getTown().getName(), percent);
+				Governor.incomeTaxData.saveConfig();
 			} catch (NotRegisteredException e) {
 			}
 			
@@ -559,7 +559,7 @@ public class GovernorCommands implements CommandExecutor {
 
 		} else if (args[0].equalsIgnoreCase("nationincometax")) {
 			
-			if (!ConfigVals.incomeTaxEnabled) {
+			if (!Config.incomeTaxEnabled) {
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cIncome tax is disabled on this server"));
 				return false;
 			}
@@ -588,8 +588,8 @@ public class GovernorCommands implements CommandExecutor {
 			}
 			
 		
-			if (percent > ConfigVals.maxTaxRate) {
-				p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou cannot set an income tax above " + String.valueOf(ConfigVals.maxTaxRate*100) + "%"));
+			if (percent > Config.maxTaxRate) {
+				p.sendMessage(Helper.Chatlabel() + Helper.color("&cYou cannot set an income tax above " + String.valueOf(Config.maxTaxRate*100) + "%"));
 				p.sendMessage(Helper.Chatlabel() + Helper.color("&cExample: '0.05' = 5% income tax"));
 				return false;
 			}
@@ -606,9 +606,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 
 			boolean allowedRank = false;
-			for (int i = 0; i < ConfigVals.incomeTaxNationAllowedRanks.size(); i++) {
+			for (int i = 0; i < Config.incomeTaxNationAllowedRanks.size(); i++) {
 				for (int j = 0; j < nationRanks.size(); j++) {
-					if (nationRanks.get(j).equalsIgnoreCase(ConfigVals.incomeTaxNationAllowedRanks.get(i))) {
+					if (nationRanks.get(j).equalsIgnoreCase(Config.incomeTaxNationAllowedRanks.get(i))) {
 						allowedRank = true;
 					}
 				}
@@ -623,9 +623,9 @@ public class GovernorCommands implements CommandExecutor {
 			}
 			
 			try {
-				Main.incomeNationTaxMap.put(TownyAPI.getInstance().getResident(p).getNation().getName(), percent);
-				Main.incomeTaxData.getConfig().set("Nations." + TownyAPI.getInstance().getResident(p).getNation().getName(), percent);
-				Main.incomeTaxData.saveConfig();
+				Governor.incomeNationTaxMap.put(TownyAPI.getInstance().getResident(p).getNation().getName(), percent);
+				Governor.incomeTaxData.getConfig().set("Nations." + TownyAPI.getInstance().getResident(p).getNation().getName(), percent);
+				Governor.incomeTaxData.saveConfig();
 			} catch (TownyException e) {
 			}
 			
